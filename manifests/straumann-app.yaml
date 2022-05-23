@@ -1,0 +1,70 @@
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: mysql-secret
+# type: Opaque
+# data:
+#   mysql-user-username: YWRtaW4=
+#   mysql-user-password: YWRtaW4xMjM=
+#   mysql-url: amRiYzpteXNxbDovL2Rldi1kYi5jeXF4MnJ4cXpvamsuYXAtc291dGgtMS5yZHMuYW1hem9uYXdzLmNvbTozMzA2L2l0ZW0=
+# ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: straumann-app
+  labels:
+    app: straumann-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: straumann-app
+  template:
+    metadata:
+      labels:
+        app: straumann-app
+    spec:
+      containers:
+        - name: straumann-app
+          image: rohan1203/dev-app:dev
+          ports:
+            - containerPort: 8080
+          resources:
+              requests:
+                memory: "200Mi"
+                cpu: 0.5
+              limits:
+                memory: "200Mi"
+                cpu: 0.5
+          # env:
+          #   - name: MYSQL_URL
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: mysql-secret
+          #         key: mysql-url
+          #   - name: MYSQL_USERNAME
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: mysql-secret
+          #         key: mysql-user-username
+          #   - name: MYSQL_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: mysql-secret
+          #         key: mysql-user-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: straumann-app-svc
+  labels:
+    app: straumann-app
+spec:
+  selector:
+    app: straumann-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      name: tcp
+  type: NodePort

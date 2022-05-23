@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: tcp
+  type: NodePort
+  selector:
+      app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+      app: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+      # annotations:
+      #   sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        # resources:
+        #   requests:
+        #     memory: "500Mi"
+        #     cpu: 0.5
+        #   limits:
+        #     memory: "500Mi"
+        #     cpu: 0.5
+        ports:
+        - containerPort: 80
+          name: nginx

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+ name: allow-all-ingress-and-egress-traffic
+spec:
+ egress:
+ - {}
+ ingress:
+ - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+ podSelector:
+    matchLabels:
+      app: straumann-app
+ policyTypes:
+ - Ingress
+ - Egress

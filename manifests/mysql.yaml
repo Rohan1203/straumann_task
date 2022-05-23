@@ -1,0 +1,54 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mysql
+#   labels:
+#     app: mysql
+# spec:
+#   ports:
+#   - port: 3306
+#     protocol: TCP
+#     name: tcp
+#   # type: LoadBalancer
+#   selector:
+#       app: mysql
+# ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql1
+  labels:
+      app: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+      # annotations:
+      #   sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - image: mysql:8.0
+        name: mysql
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: 0.5
+          limits:
+            memory: "500M`i"
+            cpu: 0.5
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root@root
+        - name: MYSQL_DATABASE
+          value: item
+        - name: MYSQL_USER
+          value: straumann
+        - name: MYSQL_PASSWORD
+          value: straumann
+        ports:
+        - containerPort: 3306
+          name: mysql
