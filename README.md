@@ -18,4 +18,4 @@ The APIs exposed are:
 6. /item/:id (method=GET)
 
 Test in the postman by appending the lost to the prefix of the endpoints
-eg. http://<your host>:<port>/health
+eg. http://[your host]:[port]/health
